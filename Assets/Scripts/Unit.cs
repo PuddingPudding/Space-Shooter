@@ -4,15 +4,28 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
+    public enum ETeam
+    {
+        Player,
+        Enemy,
+        None
+    }
     [SerializeField] private float m_fMaxHp = 1;
     [SerializeField] private float m_fSpeed = 5;
     [SerializeField] private float m_fAttack = 1;
+    [SerializeField] private SpriteRenderer m_spriteRendererFace; //外貌
     private float m_fCurrentHp;
     private Rigidbody2D m_rigidbody2D;
+    private ETeam m_eTeam = ETeam.None;
 
     private void Awake()
     {
         m_rigidbody2D = this.GetComponent<Rigidbody2D>();
+    }
+
+    public void SetFace(Sprite _spriteNewFace)
+    {
+        m_spriteRendererFace.sprite = _spriteNewFace;
     }
 
     public void Move(Vector2 _v2Dir)
