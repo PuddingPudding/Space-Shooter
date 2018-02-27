@@ -10,6 +10,18 @@ public class BulletScript : MonoBehaviour
     private Unit.ETeam m_eTeam;
     private float m_fExistTime;
 
+    public Unit.ETeam Team
+    {
+        get
+        {
+            return m_eTeam;
+        }
+        set
+        {
+            m_eTeam = value; //這邊的value就表示傳入值
+        }
+    }
+
     public void InitAndShoot(Vector2 _v2Dir , Vector2 _v2Pos , Unit.ETeam _eTeam)
     {
         m_eTeam = _eTeam;
@@ -27,7 +39,8 @@ public class BulletScript : MonoBehaviour
             if(m_fExistTime >= m_fLifeTime)
             {
                 m_fExistTime = 0;
-                BulletPool.g_uniqueInstance.BackToBulletPool(this.gameObject);
+                //BulletPool.g_uniqueInstance.BackToBulletPool(this.gameObject);
+                BulletPool.Instance.BackToBulletPool(this.gameObject);
             }
         }
     }
@@ -35,6 +48,7 @@ public class BulletScript : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         m_fExistTime = 0;
-        BulletPool.g_uniqueInstance.BackToBulletPool(this.gameObject);
+        //BulletPool.g_uniqueInstance.BackToBulletPool(this.gameObject);
+        BulletPool.Instance.BackToBulletPool(this.gameObject);
     }
 }
