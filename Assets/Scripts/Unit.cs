@@ -14,13 +14,12 @@ public class Unit : MonoBehaviour
     [SerializeField] private float m_fSpeed = 5;
     [SerializeField] private float m_fAttack = 1;
     [SerializeField] private SpriteRenderer m_spriteRendererFace; //外貌
+    [SerializeField] private Rigidbody2D m_rigidbody2D;
     private float m_fCurrentHp;
-    private Rigidbody2D m_rigidbody2D;
     private ETeam m_eTeam = ETeam.None;
 
     private void Awake()
     {
-        m_rigidbody2D = this.GetComponent<Rigidbody2D>();
     }
 
     public void SetFace(Sprite _spriteNewFace)
@@ -43,5 +42,6 @@ public class Unit : MonoBehaviour
         {
             m_fCurrentHp = 0;
         }
+        Debug.Log("痛");
     }
 }

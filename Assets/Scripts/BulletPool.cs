@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class BulletPool : MonoBehaviour
 {
     [SerializeField] private GameObject m_gameObjBulletPrefab; //每個子彈的遊戲物件原型
     [SerializeField] private List<GameObject> m_listBulletPrefab;
-    private static BulletPool m_instance;
+    private static BulletPool g_instance;
 
     private BulletPool() //先將建構子宣告私有化，避免人家亂生孩子
     {
@@ -17,52 +18,15 @@ public class BulletPool : MonoBehaviour
     {
         get
         {
-            if (m_instance == null)
-            {
-                GameObject singleton = new GameObject();
-
-                m_instance = singleton.AddComponent<BulletPool>();
-                singleton.name = "[Singleton] " + typeof(BulletPool).ToString();
-
-                DontDestroyOnLoad(singleton);
-
-                Debug.Log("[Singleton] 有一個 " + typeof(BulletPool) +
-                          " 類別的物件需要被生成，所以 '" + singleton +
-                          "' 就被製造出來並扔到 DontDestroyOnLoad.");
-            }
-            else
-            {
-                Debug.Log("[Singleton] Using instance already created: " +
-                          m_instance.gameObject.name);
-            }
-            return m_instance;
+            return g_instance;
         }
     }
 
-    private void Start()
+    private void Awake()
     {
-        m_instance = this;
+        g_instance = this;
+        DontDestroyOnLoad(this); //不要讓該物件在之後被刪掉，因為子彈池到哪都用得上
     }
-
-    //public static BulletPool g_uniqueInstance = new BulletPool();
-    //[SerializeField] private GameObject m_gameObjBulletPrefab; //每個子彈的遊戲物件原型
-    //[SerializeField] private List<GameObject> m_listBulletPrefab;
-
-    //private BulletPool() //先將自己的建構子宣告私有化，避免別人亂生孩子
-    //{
-    //    m_listBulletPrefab = new List<GameObject>();
-    //}
-    //public BulletPool Instance
-    //{
-    //    get
-    //    {
-    //        if (g_uniqueInstance == null)
-    //        {
-    //            g_uniqueInstance = new BulletPool();
-    //        }
-    //        return g_uniqueInstance;
-    //    }
-    //}
 
     public GameObject GetBulletPrefab()
     {
