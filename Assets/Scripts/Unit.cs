@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit : MonoBehaviour
+public abstract class Unit : MonoBehaviour
 {
     public enum ETeam
     {
@@ -10,17 +10,13 @@ public class Unit : MonoBehaviour
         Enemy,
         None
     }
-    [SerializeField] private float m_fMaxHp = 1;
-    [SerializeField] private float m_fSpeed = 5;
-    [SerializeField] private float m_fAttack = 1;
-    [SerializeField] private SpriteRenderer m_spriteRendererFace; //外貌
-    [SerializeField] private Rigidbody2D m_rigidbody2D;
-    private float m_fCurrentHp;
-    private ETeam m_eTeam = ETeam.None;
-
-    private void Awake()
-    {
-    }
+    [SerializeField] protected float m_fMaxHp = 1;
+    [SerializeField] protected float m_fSpeed = 5;
+    [SerializeField] protected float m_fAttack = 1;
+    [SerializeField] protected SpriteRenderer m_spriteRendererFace; //外貌
+    [SerializeField] protected Rigidbody2D m_rigidbody2D;
+    protected float m_fCurrentHp;
+    protected ETeam m_eTeam = ETeam.None;
 
     public void SetFace(Sprite _spriteNewFace)
     {
@@ -35,13 +31,5 @@ public class Unit : MonoBehaviour
     {
         m_rigidbody2D.velocity = _v2Dir.normalized * m_fSpeed * _fTimes;
     }
-    public void Hit(float _fDamage)
-    {
-        m_fCurrentHp -= _fDamage;
-        if(m_fCurrentHp < 0)
-        {
-            m_fCurrentHp = 0;
-        }
-        Debug.Log("痛");
-    }
+    public abstract void Hit(float _fDamage);
 }
