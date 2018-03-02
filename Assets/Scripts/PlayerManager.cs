@@ -52,7 +52,7 @@ public class PlayerManager : MonoBehaviour
         if(m_playerBullets.Count < m_iMaxBulletNum && m_fShootingIntervalCounter >= m_fShootingInterval)
         {
             m_fShootingIntervalCounter = 0;
-            GameObject bulletPrefab = BulletPool.Instance.GetBulletPrefab();
+            GameObject bulletPrefab = BulletPool.Instance.GetBulletPrefab(m_player.Team);
             BulletScript bulletScript = bulletPrefab.GetComponent<BulletScript>();
             bulletScript.SetReuse(BulletPool.Instance.BackToBulletPool); //再生出子彈後，接著告訴那顆子彈在消失後該歸還至何處
             bulletScript.InitAndShoot(this.transform.up, (Vector2)m_player.transform.position + m_v2BulletOffset, Unit.ETeam.Player);

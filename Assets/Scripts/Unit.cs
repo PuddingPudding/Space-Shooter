@@ -18,6 +18,18 @@ public abstract class Unit : MonoBehaviour
     protected float m_fCurrentHp;
     protected ETeam m_eTeam = ETeam.None;
 
+    public Unit.ETeam Team
+    {
+        get
+        {
+            return m_eTeam;
+        }
+        set
+        {
+            m_eTeam = value; //這邊的value就表示傳入值
+        }
+    }
+
     public void SetFace(Sprite _spriteNewFace)
     {
         m_spriteRendererFace.sprite = _spriteNewFace;

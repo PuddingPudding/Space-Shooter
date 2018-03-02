@@ -49,14 +49,22 @@ public class BulletScript : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        m_fExistTime = 0;
         //BulletPool.g_uniqueInstance.BackToBulletPool(this.gameObject);
         //BP.BackToBulletPool(this.gameObject);
-        collision.gameObject.SendMessage("Hit", m_fDamage , SendMessageOptions.DontRequireReceiver);
-        m_reuse.Invoke(this.gameObject);
+        Unit unitCollision = collision.GetComponent<Unit>();
+        if (unitCollision != null)
+        {
+            if(unitCollision.Team != this.Team)
+            {
+                m_fExistTime = 0;
+                collision.gameObject.SendMessage("Hit", m_fDamage, SendMessageOptions.DontRequireReceiver);
+                m_reuse.Invoke(this.gameObject);
+            }
+        }        
     }
+    
     public void SetReuse(Reuse _reuse)
     {
         m_reuse = _reuse;

@@ -43,6 +43,12 @@ public class BulletPool : MonoBehaviour
         gameObjBullet.SetActive(true);
         return gameObjBullet;
     }
+    public GameObject GetBulletPrefab(Unit.ETeam _eTeam)
+    {
+        GameObject gameObjBullet = GetBulletPrefab();
+        gameObjBullet.GetComponent<BulletScript>().Team = _eTeam;
+        return gameObjBullet;
+    }
     public void BackToBulletPool(GameObject _gameObjBullet)
     {
         m_listBulletPrefab.Add(_gameObjBullet);

@@ -21,6 +21,7 @@ public class WallUnit : Unit
 
     public void SetWall(Explode _explode)
     {
+        this.Team = Unit.ETeam.None;
         m_fCurrentHp = m_fMaxHp;
         this.SetFace(m_normalWall);
         this.SetExplode(_explode);

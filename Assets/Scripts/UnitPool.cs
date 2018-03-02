@@ -7,9 +7,11 @@ public class UnitPool : MonoBehaviour
     [SerializeField] private GameObject m_playerPrefab;
     [SerializeField] private GameObject m_wallPrefab;
     [SerializeField] private GameObject m_explodePrefab;
+    [SerializeField] private GameObject m_enemyPrefab;
     [SerializeField] private List<GameObject> m_listPlayerPrefab;
     [SerializeField] private List<GameObject> m_listWallPrefab;
     [SerializeField] private List<GameObject> m_listExplodePrefab;
+    [SerializeField] private List<GameObject> m_listEnemyPrefab;
     private static UnitPool g_instance;
 
     private UnitPool() //先將建構子宣告私有化，避免人家亂生孩子
@@ -80,7 +82,7 @@ public class UnitPool : MonoBehaviour
     public GameObject GetExplodePrefab()
     {
         GameObject explodePrefab = null;
-        if (m_listWallPrefab.Count > 0)
+        if (m_listExplodePrefab.Count > 0)
         {
             explodePrefab = m_listExplodePrefab[0];
             m_listExplodePrefab.RemoveAt(0);            
@@ -97,5 +99,27 @@ public class UnitPool : MonoBehaviour
     {
         m_listExplodePrefab.Add(_explodePrefab);
         _explodePrefab.SetActive(false);
+    }
+
+    public GameObject GetEnemyPrefab(int _iEnemyFace)
+    {
+        GameObject enemyPrefab = null;
+        if(m_listEnemyPrefab.Count > 0)
+        {
+            enemyPrefab = m_listEnemyPrefab[0];
+            m_listEnemyPrefab.RemoveAt(0);
+        }
+        else
+        {
+            enemyPrefab = Instantiate(this.m_enemyPrefab);
+        }
+        enemyPrefab.GetComponent<EnemyUnit>().SetEnemy(_iEnemyFace, this.BackToEnemyPool);
+        enemyPrefab.SetActive(true);
+        return enemyPrefab;
+    }
+    public void BackToEnemyPool(GameObject _enemyPrefab) //目前每一個都分開寫，由於功能基本上一樣的關係，日後應該會考慮整理成一個函式
+    {
+        m_listEnemyPrefab.Add(_enemyPrefab);
+        _enemyPrefab.SetActive(false);
     }
 }

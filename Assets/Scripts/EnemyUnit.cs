@@ -2,23 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerUnit : Unit
+public class EnemyUnit : Unit
 {
     public delegate void Explode(GameObject _gameObject);
-    [SerializeField] private List<Sprite> m_playerFaces;
+    [SerializeField] private List<Sprite> m_enemyFaces;
     private Explode m_explode;
 
-    public PlayerUnit(int _iFaceNum, Explode _explode)
+    public EnemyUnit(int _iFaceNum, Explode _explode)
     {
-        this.Team = Unit.ETeam.Player;
-        if (_iFaceNum < m_playerFaces.Count)
+        this.Team = Unit.ETeam.Enemy;
+        if (_iFaceNum < m_enemyFaces.Count)
         {
-            this.SetFace(m_playerFaces[_iFaceNum]);
+            this.SetFace(m_enemyFaces[_iFaceNum]);
         }
         this.SetExplode(_explode);
     }
-    protected PlayerUnit()
+    protected EnemyUnit()
     {
+    }
+
+    public void SetEnemy(int _iFaceNum, Explode _explode)
+    {
+        if (_iFaceNum < m_enemyFaces.Count)
+        {
+            this.SetFace(m_enemyFaces[_iFaceNum]);
+        }
+        this.SetExplode(_explode);
     }
 
     private void Awake()
@@ -26,19 +35,10 @@ public class PlayerUnit : Unit
         m_fCurrentHp = m_fMaxHp;
     }
 
-    public void SetPlayer(int _iFaceNum, Explode _explode)
-    {
-        if (_iFaceNum < m_playerFaces.Count)
-        {
-            this.SetFace(m_playerFaces[_iFaceNum]);
-        }
-        this.SetExplode(_explode);
-    }
-
     public override void Hit(float _fDamage)
     {
         m_fCurrentHp -= _fDamage;
-        if(m_fCurrentHp <= 0)
+        if (m_fCurrentHp <= 0)
         {
             GameObject explodePrefab = UnitPool.Instance.GetExplodePrefab();
             explodePrefab.transform.position = this.transform.position;
