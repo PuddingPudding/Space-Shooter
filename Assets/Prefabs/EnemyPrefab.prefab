@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_fMaxHp: 1
-  m_fSpeed: 2
+  m_fSpeed: 1
   m_fAttack: 1
   m_spriteRendererFace: {fileID: 212816333604635664}
   m_rigidbody2D: {fileID: 50622559009071454}

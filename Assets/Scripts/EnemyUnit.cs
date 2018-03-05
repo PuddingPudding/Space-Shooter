@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyUnit : Unit
+public class EnemyUnit : Unit , ISurrounding //另外在實做 "周圍" 介面
 {
     public delegate void Explode(GameObject _gameObject);
     [SerializeField] private List<Sprite> m_enemyFaces;
@@ -55,5 +55,15 @@ public class EnemyUnit : Unit
     public void SetExplode(Explode _explode)
     {
         m_explode = _explode;
+    }
+
+    public ISurrounding GetNeighbor(EDirection _eDir)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void SetNeighbor(ISurrounding _anotherSurrounding, EDirection _eDir)
+    {
+        throw new System.NotImplementedException();
     }
 }
