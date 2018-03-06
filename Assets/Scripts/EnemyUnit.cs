@@ -7,6 +7,8 @@ public class EnemyUnit : Unit , ISurrounding //另外在實做 "周圍" 介面
     public delegate void Explode(GameObject _gameObject);
     [SerializeField] private List<Sprite> m_enemyFaces;
     private Explode m_explode;
+    private EnemyUnit[] m_arrNeighbors = new EnemyUnit[System.Enum.GetNames(typeof(EDirection)).Length];
+    //System.Enum.GetNames(typeof(EDirection)).Length是用來查有幾個方向用的
 
     public EnemyUnit(int _iFaceNum, Explode _explode)
     {
@@ -59,11 +61,44 @@ public class EnemyUnit : Unit , ISurrounding //另外在實做 "周圍" 介面
 
     public ISurrounding GetNeighbor(EDirection _eDir)
     {
-        throw new System.NotImplementedException();
+        return this.m_arrNeighbors[(int)_eDir];
     }
 
     public void SetNeighbor(ISurrounding _anotherSurrounding, EDirection _eDir)
     {
-        throw new System.NotImplementedException();
+        EnemyUnit anotherEnemy = (EnemyUnit)_anotherSurrounding;
+        this.m_arrNeighbors[(int)_eDir] = anotherEnemy;
     }
+
+    public bool HasNeighbor(EDirection _eDir)
+    {
+        bool hasNeighbor = false;
+        if(this.m_arrNeighbors[(int)_eDir] != null)
+        {
+            if(this.m_arrNeighbors[(int)_eDir].isActiveAndEnabled)
+            {
+                hasNeighbor = true;
+            }
+        }
+        return hasNeighbor;
+    }
+
+    public bool HasNeighborThorough(EDirection _eDir)
+    {
+        bool hasNeighbor = false;
+        EnemyUnit enemyTemp = this;
+        while (enemyTemp.GetNeighbor(_eDir) != null && !hasNeighbor)
+        {
+            if(enemyTemp.HasNeighbor(_eDir) )
+            {
+                hasNeighbor = true;
+            }
+            else
+            {
+                enemyTemp = (EnemyUnit)enemyTemp.GetNeighbor(_eDir);
+            }
+        }
+        return hasNeighbor;
+    }
+
 }

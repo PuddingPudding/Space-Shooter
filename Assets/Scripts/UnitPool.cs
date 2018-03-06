@@ -12,7 +12,7 @@ public class UnitPool : MonoBehaviour
     [SerializeField] private List<GameObject> m_listWallPrefab;
     [SerializeField] private List<GameObject> m_listExplodePrefab;
     [SerializeField] private List<GameObject> m_listEnemyPrefab;
-    private static UnitPool g_instance;
+    private static UnitPool g_instance; //唯一存在
 
     private UnitPool() //先將建構子宣告私有化，避免人家亂生孩子
     {
