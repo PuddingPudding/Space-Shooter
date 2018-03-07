@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,9 +16,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Collider2D m_col2DRightBorder; //畫面左邊邊界
     [SerializeField] private float m_fEnemyShootingInterval = 2; //敵人的射擊間隔
     [SerializeField] private int m_iShooringEnemyNum = 2; //每次射擊的敵人數量
+    [SerializeField] private PlayerManager m_playerManager; //玩家管理者，用來記錄命數等
+    [SerializeField] private GameObject m_gameObjPlayerLife; //用來表示玩家生命的圖片
+    [SerializeField] private RectTransform m_rtLifeInitPoint; //用來生成玩家生命UI的位置基準點
+    [SerializeField] private Vector2 m_v2PlayerLifeInterval = new Vector2(40,-40); //玩家生命的圖片之間隔
+
     private List<EnemyUnit> m_listEnemyUnit = new List<EnemyUnit>();
-    private Vector2 v2EnemyMovements = Vector2.left; //需要修改
+    private Vector2 v2EnemyMovements = Vector2.left; //敵人移動方向
     private float m_fEnemyShootingCounter; //射擊間隔計數器
+    private List<GameObject> m_gameObjListPlayerLife = new List<GameObject>();
 
     // Use this for initialization
     void Start()
@@ -46,7 +53,7 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < m_iLengthX; j++)
             {
-                int iSetting = i * m_iLengthX + j; //依照順序找出各別需要設定的格子，接著再去依照八個方位設定關係
+                int iSetting = i * m_iLengthX + j; //依照順序找出各別需要設定的敵人，接著再去依照八個方位設定關係
                 int iNeighbor; //用來記錄周遭八方位之座標
 
                 iNeighbor = iSetting - 1;
@@ -91,6 +98,16 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
+        for(int i = 0;  i < m_playerManager.Life; i++)
+        {
+            GameObject gameObjLifeUI = Instantiate(m_gameObjPlayerLife);
+            gameObjLifeUI.transform.SetParent(m_rtLifeInitPoint);
+            Vector2 finalPosition = Vector2.zero;
+            finalPosition.x += m_v2PlayerLifeInterval.x * i;
+            gameObjLifeUI.transform.localPosition = finalPosition;
+            m_gameObjListPlayerLife.Add(gameObjLifeUI);
+        }
     }
 
     // Update is called once per frame
@@ -116,6 +133,14 @@ public class GameManager : MonoBehaviour
         {
             m_fEnemyShootingCounter -= m_fEnemyShootingInterval;
             EnemyShoot(m_iShooringEnemyNum);
+        }
+
+        for(int i = 0; i< m_gameObjListPlayerLife.Count; i++)
+        {
+            if(i >= m_playerManager.Life) //特別注意要用">=" 因為這邊i是從0開始，而當玩家只剩1滴血時，我們得將第二張(索引值1)愛心的圖片關掉
+            {
+                m_gameObjListPlayerLife[i].SetActive(false);
+            }
         }
     }
 
