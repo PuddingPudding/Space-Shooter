@@ -26,6 +26,15 @@ public class GameManager : MonoBehaviour
     private float m_fEnemyShootingCounter; //射擊間隔計數器
     private List<GameObject> m_gameObjListPlayerLife = new List<GameObject>();
 
+
+    //interface A { }
+    //class B : A { List<ISurrounding> aaa = null; public void add(ISurrounding i) { } }
+    //class C : A { ISurrounding[] aaa = null; public void add(ISurrounding i) { } }
+    //class D
+    //{
+    //    Arrange.RectArrangement(new B(), m_iLengthX, m_iLengthY);
+    //    Arrange.RectArrangement(new C(), m_iLengthX, m_iLengthY);
+    //}
     // Use this for initialization
     void Start()
     {
@@ -48,6 +57,8 @@ public class GameManager : MonoBehaviour
                 enemyPrefab.transform.localPosition = enemyPos;
             }
         }
+
+        //Arrange.RectArrangement(m_listEnemyUnit, m_iLengthX, m_iLengthY);
 
         for (int i = 0; i < m_iLengthY; i++) //在建立完敵人列表後
         {

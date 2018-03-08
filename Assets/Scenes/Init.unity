@@ -395,8 +395,8 @@ MonoBehaviour:
   m_iLengthY: 5
   m_col2DLeftBorder: {fileID: 172614900}
   m_col2DRightBorder: {fileID: 1036837902}
-  m_fEnemyShootingInterval: 1
-  m_iShooringEnemyNum: 1
+  m_fEnemyShootingInterval: 1.2
+  m_iShooringEnemyNum: 2
   m_playerManager: {fileID: 1008002787}
   m_gameObjPlayerLife: {fileID: 1257633467814614, guid: 689673502d0397b4f852ecd7ff07ee1a,
     type: 2}
