@@ -25,6 +25,7 @@ public class EnemyUnit : Unit , ISurrounding //另外在實做 "周圍" 介面
 
     public void SetEnemy(int _iFaceNum, Explode _explode)
     {
+        //this.Team = Unit.ETeam.Enemy;
         if (_iFaceNum < m_enemyFaces.Count)
         {
             this.SetFace(m_enemyFaces[_iFaceNum]);
