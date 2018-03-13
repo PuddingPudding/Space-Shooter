@@ -62,7 +62,7 @@ public class TouchingTest : MonoBehaviour , ICollidableBox
 
         if(CustomCollision.CollisionDetection(this , m_otherColliderBox))
         {
-            Debug.Log("雞雞勃起了呀~!!!他的陰莖好大根");
+            Debug.Log("AABB碰觸");
         }
 
         if (Input.GetKey(KeyCode.RightArrow))

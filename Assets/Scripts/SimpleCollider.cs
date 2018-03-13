@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class SimpleCollider : MonoBehaviour, ICollidableBox
 {
-    [SerializeField] Collider2D m_collider;
+    Collider2D m_collider;
+
+    private void Awake()
+    {
+        m_collider = this.GetComponent<Collider2D>();
+    }
 
     public float ColLeft
     {
