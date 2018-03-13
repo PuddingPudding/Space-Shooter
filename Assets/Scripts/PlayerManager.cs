@@ -43,6 +43,10 @@ public class PlayerManager : MonoBehaviour
         {
             Shoot();
         }
+        if(Input.GetKeyDown(KeyCode.X))
+        {
+            m_player.Hit(1);
+        }
 
         for (int i = 0; i < m_playerBullets.Count; i++)
         {
@@ -79,7 +83,7 @@ public class PlayerManager : MonoBehaviour
 
     private void RevivePlayer()
     {
-        GameObject gObjPlayer = UnitPool.Instance.GetPlayerPrefab(0);
+        GameObject gObjPlayer = UnitPool.Instance.GetPrefab(UnitPool.EPrefabType.Player);
         m_player = gObjPlayer.GetComponent<PlayerUnit>();
         m_player.transform.SetParent(m_tPlayerSpawnPoint);
         m_player.transform.localPosition = Vector2.zero;

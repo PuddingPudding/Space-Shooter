@@ -42,17 +42,20 @@ public class BulletScript : MonoBehaviour
             if(m_fExistTime >= m_fLifeTime)
             {
                 m_fExistTime = 0;
-                //BulletPool.g_uniqueInstance.BackToBulletPool(this.gameObject);
-                //BP.BackToBulletPool(this.gameObject);
-                m_reuse.Invoke(this.gameObject);
+                if(m_reuse != null)
+                {
+                    m_reuse.Invoke(this.gameObject);
+                }
+                else
+                {
+                    
+                }
             }
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //BulletPool.g_uniqueInstance.BackToBulletPool(this.gameObject);
-        //BP.BackToBulletPool(this.gameObject);
         Unit unitCollision = collision.GetComponent<Unit>();
         if (unitCollision != null)
         {

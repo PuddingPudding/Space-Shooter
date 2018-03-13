@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class UnitPool : MonoBehaviour
 {
+    public enum EPrefabType
+    {
+        Player,
+        Enemy,
+        Wall,
+        Bullet,
+        Explode
+    }
+
     [SerializeField] private GameObject m_playerPrefab;
     [SerializeField] private GameObject m_wallPrefab;
     [SerializeField] private GameObject m_explodePrefab;
@@ -35,44 +44,40 @@ public class UnitPool : MonoBehaviour
         DontDestroyOnLoad(this); //不要讓該物件在之後被刪掉，因為物件池到哪都用得上
     }
 
-    public GameObject GetPlayerPrefab(int _iPlayerFace)
+    public GameObject GetPrefab(EPrefabType _ePrefabType)
     {
-        GameObject playerPrefab = null;
-        if (m_listPlayerPrefab.Count > 0)
+        GameObject gameObj = null;
+        switch(_ePrefabType)
         {
-            playerPrefab = m_listPlayerPrefab[0];
-            m_listPlayerPrefab.RemoveAt(0);
+            case EPrefabType.Player:
+                if(m_listPlayerPrefab.Count > 0)
+                {
+                    gameObj = m_listPlayerPrefab[0];
+                    m_listPlayerPrefab.RemoveAt(0);
+                }
+                else
+                {
+                    gameObj = Instantiate(m_playerPrefab);
+                }
+                PlayerUnit playerTemp = gameObj.GetComponent<PlayerUnit>();
+                playerTemp.Init(ImgBase.Instance.PlayerFaces[0], BackToPlayerPool, Unit.ETeam.Player);
+                ExplodeScript explodeTemp = GetPrefab(EPrefabType.Explode).GetComponent<ExplodeScript>();
+                playerTemp.SetExplode(explodeTemp);
+                break;
+            case EPrefabType.Explode:
+                gameObj = this.GetExplodePrefab();
+                break;
         }
-        else
-        {
-            playerPrefab = Instantiate(this.m_playerPrefab);
-        }
-        playerPrefab.GetComponent<PlayerUnit>().SetPlayer(_iPlayerFace, this.BackToPlayerPool);
-        playerPrefab.SetActive(true);
-        return playerPrefab;
+        gameObj.SetActive(true);
+        return gameObj;
     }
+
     public void BackToPlayerPool(GameObject _playerPrefab)
     {
         m_listPlayerPrefab.Add(_playerPrefab);
         _playerPrefab.SetActive(false);
     }
 
-    public GameObject GetWallPrefab()
-    {
-        GameObject wallPrefab = null;
-        if (m_listWallPrefab.Count > 0)
-        {
-            wallPrefab = m_listWallPrefab[0];
-            m_listWallPrefab.RemoveAt(0);
-        }
-        else
-        {
-            wallPrefab = Instantiate(this.m_wallPrefab);
-        }
-        wallPrefab.GetComponent<WallUnit>().SetWall(BackToWallPool);
-        wallPrefab.SetActive(true);
-        return wallPrefab;
-    }
     public void BackToWallPool(GameObject _wallPrefab)
     {
         m_listWallPrefab.Add(_wallPrefab);
@@ -101,22 +106,6 @@ public class UnitPool : MonoBehaviour
         _explodePrefab.SetActive(false);
     }
 
-    public GameObject GetEnemyPrefab(int _iEnemyFace)
-    {
-        GameObject enemyPrefab = null;
-        if(m_listEnemyPrefab.Count > 0)
-        {
-            enemyPrefab = m_listEnemyPrefab[0];
-            m_listEnemyPrefab.RemoveAt(0);
-        }
-        else
-        {
-            enemyPrefab = Instantiate(this.m_enemyPrefab);
-        }
-        enemyPrefab.GetComponent<EnemyUnit>().SetEnemy(_iEnemyFace, this.BackToEnemyPool);
-        enemyPrefab.SetActive(true);
-        return enemyPrefab;
-    }
     public void BackToEnemyPool(GameObject _enemyPrefab) //目前每一個都分開寫，由於功能基本上一樣的關係，日後應該會考慮整理成一個函式
     {
         m_listEnemyPrefab.Add(_enemyPrefab);

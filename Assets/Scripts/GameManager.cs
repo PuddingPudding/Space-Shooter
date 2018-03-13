@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (int iPos in m_iListWallPos)
         {
-            GameObject wallPrefab = UnitPool.Instance.GetWallPrefab();
+            GameObject wallPrefab = UnitPool.Instance.GetPrefab(UnitPool.EPrefabType.Wall);
             wallPrefab.transform.SetParent(m_tWallInitPoint);
             wallPrefab.transform.localPosition = new Vector2((iPos * m_fWallInterval), 0);
         }
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
         {
             for(int j = 0; j < m_iLengthX; j++)
             {
-                GameObject enemyPrefab = UnitPool.Instance.GetEnemyPrefab(0);
+                GameObject enemyPrefab = UnitPool.Instance.GetPrefab(UnitPool.EPrefabType.Wall);
                 m_listEnemyUnit.Add(enemyPrefab.GetComponent<EnemyUnit>());
                 enemyPrefab.transform.SetParent(m_tEnemyInitPoint);
                 Vector2 enemyPos = Vector2.zero;

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Unit : MonoBehaviour
+public abstract class Unit : MonoBehaviour , ICollidableBox
 {
+    public delegate void Reuse(GameObject _gameObject);
     public enum ETeam
     {
         Player,
@@ -14,9 +15,10 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] protected float m_fSpeed = 5;
     [SerializeField] protected float m_fAttack = 1;
     [SerializeField] protected SpriteRenderer m_spriteRendererFace; //外貌
-    [SerializeField] protected Rigidbody2D m_rigidbody2D;
+    [SerializeField] protected BoxCollider2D m_collider;
     protected float m_fCurrentHp;
     protected ETeam m_eTeam = ETeam.None;
+    protected Reuse m_reuse;
 
     public Unit.ETeam Team
     {
@@ -30,6 +32,35 @@ public abstract class Unit : MonoBehaviour
         }
     }
 
+    public float ColLeft
+    {
+        get
+        {
+            return this.transform.position.x + m_collider.offset.x - (m_collider.bounds.size.x / 2);
+        }
+    }
+    public float ColRight
+    {
+        get
+        {
+            return this.transform.position.x + m_collider.offset.x + (m_collider.bounds.size.x / 2);
+        }
+    }
+    public float ColTop
+    {
+        get
+        {
+            return this.transform.position.y + m_collider.offset.y + (m_collider.bounds.size.y / 2);
+        }
+    }
+    public float ColBotton
+    {
+        get
+        {
+            return this.transform.position.y + m_collider.offset.y - (m_collider.bounds.size.y / 2);
+        }
+    }
+
     public void SetFace(Sprite _spriteNewFace)
     {
         m_spriteRendererFace.sprite = _spriteNewFace;
@@ -37,11 +68,36 @@ public abstract class Unit : MonoBehaviour
 
     public void Move(Vector2 _v2Dir)
     {
-        m_rigidbody2D.velocity = _v2Dir.normalized * m_fSpeed;
+        this.transform.Translate(_v2Dir * m_fSpeed * Time.deltaTime);
     }
     public void Move(Vector2 _v2Dir , float _fTimes)
     {
-        m_rigidbody2D.velocity = _v2Dir.normalized * m_fSpeed * _fTimes;
+        this.transform.Translate(_v2Dir * m_fSpeed * Time.deltaTime * _fTimes);
     }
-    public abstract void Hit(float _fDamage);
+
+    public void SetReuse(Reuse _reuse)
+    {
+        this.m_reuse = _reuse;
+    }
+    public void KillSelf() //自殺有時能解決問題
+    {
+        if(this.m_reuse != null)
+        {
+            m_reuse.Invoke(this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
+    public void Init(Sprite _spriteNewFace , Reuse _reuse , ETeam _team)
+    {
+        this.SetFace(_spriteNewFace);
+        this.SetReuse(_reuse);
+        this.m_eTeam = _team;
+        m_fCurrentHp = m_fMaxHp;
+    }
+
+    public abstract void Hit(float _fDamage); //受傷
 }
