@@ -68,11 +68,13 @@ public abstract class Unit : MonoBehaviour , ICollidableBox
 
     public void Move(Vector2 _v2Dir)
     {
-        this.transform.Translate(_v2Dir * m_fSpeed * Time.deltaTime);
+        //this.transform.Translate(_v2Dir.normalized * m_fSpeed * Time.deltaTime,Space.World);
+        this.transform.position += (Vector3)_v2Dir.normalized * m_fSpeed * Time.deltaTime;
     }
     public void Move(Vector2 _v2Dir , float _fTimes)
     {
-        this.transform.Translate(_v2Dir * m_fSpeed * Time.deltaTime * _fTimes);
+        //this.transform.Translate(_v2Dir.normalized * m_fSpeed * Time.deltaTime * _fTimes,Space.World);
+        this.transform.position += (Vector3)_v2Dir.normalized * m_fSpeed * Time.deltaTime * _fTimes;
     }
 
     public void SetReuse(Reuse _reuse)

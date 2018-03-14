@@ -26,15 +26,11 @@ public class PlayerUnit : Unit
         m_fCurrentHp -= _fDamage;
         if (m_fCurrentHp <= 0)
         {
+            this.KillSelf(); //否則便自行解決
             if (m_explodeScript != null)
             {
-                m_explodeScript.SetEvent(KillSelf); //將自殺的工作交給爆炸物件
                 m_explodeScript.transform.position = this.transform.position;
                 m_explodeScript.gameObject.SetActive(true); //讓爆炸發生，交由爆炸去處理自己死亡的事件
-            }
-            else
-            {
-                this.KillSelf(); //否則便自行解決
             }
         }
     }
