@@ -13,7 +13,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private int m_iMaxLife = 3;
     private Unit m_player;
     private int m_iCurrentLife = 3;
-    private List<BulletScript> m_playerBullets = new List<BulletScript>();
+    private List<BulletUnit> m_listPlayerBullets = new List<BulletUnit>();
     private float m_fShootingIntervalCounter = 0;
     private float m_fReviveTimeCounter = 0; //重生時間
     private bool m_bReviving = false; //是否正在重生
@@ -48,11 +48,11 @@ public class PlayerManager : MonoBehaviour
             m_player.Hit(1);
         }
 
-        for (int i = 0; i < m_playerBullets.Count; i++)
+        for (int i = 0; i < m_listPlayerBullets.Count; i++)
         {
-            if (!m_playerBullets[i].isActiveAndEnabled) //若子彈已經消失
+            if (!m_listPlayerBullets[i].isActiveAndEnabled) //若子彈已經消失
             {
-                m_playerBullets.RemoveAt(i);
+                m_listPlayerBullets.RemoveAt(i);
             }
         }
 
@@ -81,6 +81,11 @@ public class PlayerManager : MonoBehaviour
         get { return this.m_iCurrentLife; }
     }
 
+    public List<BulletUnit> BulletList
+    {
+        get { return this.m_listPlayerBullets; }
+    }
+
     private void RevivePlayer()
     {
         GameObject gObjPlayer = UnitPool.Instance.GetPrefab(UnitPool.EPrefabType.Player);
@@ -92,14 +97,16 @@ public class PlayerManager : MonoBehaviour
 
     public void Shoot()
     {
-        if (m_playerBullets.Count < m_iMaxBulletNum && m_fShootingIntervalCounter >= m_fShootingInterval && m_player.isActiveAndEnabled)
+        if (m_listPlayerBullets.Count < m_iMaxBulletNum && m_fShootingIntervalCounter >= m_fShootingInterval && m_player.isActiveAndEnabled)
         {
             m_fShootingIntervalCounter = 0;
-            GameObject bulletPrefab = BulletPool.Instance.GetBulletPrefab(m_player.Team);
-            BulletScript bulletScript = bulletPrefab.GetComponent<BulletScript>();
-            bulletScript.SetReuse(BulletPool.Instance.BackToBulletPool); //再生出子彈後，接著告訴那顆子彈在消失後該歸還至何處
-            bulletScript.InitAndShoot(this.transform.up, (Vector2)m_player.transform.position + m_v2BulletOffset, Unit.ETeam.Player);
-            m_playerBullets.Add(bulletScript);
+            //GameObject bulletPrefab = BulletPool.Instance.GetBulletPrefab(m_player.Team);
+            //BulletScript bulletScript = bulletPrefab.GetComponent<BulletScript>();
+            //bulletScript.SetReuse(BulletPool.Instance.BackToBulletPool); //在生出子彈後，接著告訴那顆子彈在消失後該歸還至何處
+            GameObject bulletPrefab = UnitPool.Instance.GetPrefab(UnitPool.EPrefabType.Bullet);
+            BulletUnit bulletUnitTemp = bulletPrefab.GetComponent<BulletUnit>();
+            bulletUnitTemp.InitAndShoot(this.transform.up, (Vector2)m_player.transform.position + m_v2BulletOffset, Unit.ETeam.Player);
+            m_listPlayerBullets.Add(bulletUnitTemp);
         }
     }
 }

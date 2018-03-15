@@ -20,6 +20,15 @@ public class BulletUnit : Unit
             this.InitAndShoot(this.transform.up + new Vector3(1, 0, 0), this.transform.position, ETeam.None);
             Debug.Log(this.transform.up);
         }
+        if (this.isActiveAndEnabled)
+        {
+            m_fExistTime += Time.deltaTime;
+            if (m_fExistTime >= m_fMaxTime)
+            {
+                m_fExistTime = 0;
+                this.KillSelf();
+            }
+        }
         //this.move(movdir);
         //if (input.getkeydown(keycode.q))
         //{

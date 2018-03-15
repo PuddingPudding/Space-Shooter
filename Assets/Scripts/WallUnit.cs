@@ -5,10 +5,7 @@ using UnityEngine;
 
 public class WallUnit : Unit
 {
-    public delegate void Explode(GameObject _gameObject);
-    [SerializeField] private Sprite m_normalWall;
-    [SerializeField] private Sprite m_damagedWall;
-    private Explode m_explode;
+    private Sprite m_sprDamagedFace;
 
     protected WallUnit()
     {
@@ -16,41 +13,35 @@ public class WallUnit : Unit
 
     private void Awake()
     {
-        m_fCurrentHp = m_fMaxHp;
     }
 
-    public void SetWall(Explode _explode)
+    public void SetDamagedFace(Sprite _sprDamagedFace)
     {
-        this.Team = Unit.ETeam.None;
-        m_fCurrentHp = m_fMaxHp;
-        this.SetFace(m_normalWall);
-        this.SetExplode(_explode);
+        this.m_sprDamagedFace = _sprDamagedFace;
+    }
+
+    public void Init(Sprite _spriteNewFace, Reuse _reuse, ETeam _team , Sprite _sprDamagedFace)
+    {
+        base.Init( _spriteNewFace,  _reuse,  _team);
+        this.SetDamagedFace(_sprDamagedFace);
     }
 
     public override void Hit(float _fDamage)
     {
         m_fCurrentHp -= _fDamage;
-        if (m_fCurrentHp <= m_fMaxHp / 2)
+        if (m_fCurrentHp <= m_fMaxHp / 2 && m_sprDamagedFace != null)
         {
-            this.SetFace(m_damagedWall);
+            this.SetFace(m_sprDamagedFace);
         }
         if (m_fCurrentHp <= 0)
         {
-            GameObject explodePrefab = UnitPool.Instance.GetExplodePrefab();
-            explodePrefab.transform.position = this.transform.position;
-            if (m_explode != null)
+            this.KillSelf(); //否則便自行解決
+            if (m_explodeScript != null)
             {
-                m_explode.Invoke(this.gameObject);
-            }
-            else
-            {
-                Destroy(this.gameObject);
+                m_explodeScript.transform.position = this.transform.position;
+                m_explodeScript.gameObject.SetActive(true); //讓爆炸發生，交由爆炸去處理自己死亡的事件
             }
         }
-    }
-    public void SetExplode(Explode _explode)
-    {
-        m_explode = _explode;
     }
 
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerUnit : Unit
 {
-    private ExplodeScript m_explodeScript;
 
     protected PlayerUnit()
     {
@@ -13,12 +12,6 @@ public class PlayerUnit : Unit
     private void Awake()
     {
         m_fCurrentHp = m_fMaxHp;
-    }
-
-    public void SetExplode(ExplodeScript _explodeScript)
-    {
-        _explodeScript.gameObject.SetActive(false);
-        m_explodeScript = _explodeScript;
     }
 
     public override void Hit(float _fDamage)

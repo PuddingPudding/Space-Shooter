@@ -17,10 +17,12 @@ public class UnitPool : MonoBehaviour
     [SerializeField] private GameObject m_wallPrefab;
     [SerializeField] private GameObject m_explodePrefab;
     [SerializeField] private GameObject m_enemyPrefab;
+    [SerializeField] private GameObject m_bulletPrefab;
     [SerializeField] private List<GameObject> m_listPlayerPrefab;
     [SerializeField] private List<GameObject> m_listWallPrefab;
     [SerializeField] private List<GameObject> m_listExplodePrefab;
     [SerializeField] private List<GameObject> m_listEnemyPrefab;
+    [SerializeField] private List<GameObject> m_listBulletPrefab;
     private static UnitPool g_instance; //唯一存在
 
     private UnitPool() //先將建構子宣告私有化，避免人家亂生孩子
@@ -41,13 +43,15 @@ public class UnitPool : MonoBehaviour
         m_listPlayerPrefab = new List<GameObject>();
         m_listWallPrefab = new List<GameObject>();
         m_listExplodePrefab = new List<GameObject>();
+        m_listBulletPrefab = new List<GameObject>();
         DontDestroyOnLoad(this); //不要讓該物件在之後被刪掉，因為物件池到哪都用得上
     }
 
     public GameObject GetPrefab(EPrefabType _ePrefabType)
     {
         GameObject gameObj = null;
-        switch(_ePrefabType)
+        ExplodeScript explodeTemp = null;
+        switch (_ePrefabType)
         {
             case EPrefabType.Player:
                 if(m_listPlayerPrefab.Count > 0)
@@ -61,8 +65,37 @@ public class UnitPool : MonoBehaviour
                 }
                 PlayerUnit playerTemp = gameObj.GetComponent<PlayerUnit>();
                 playerTemp.Init(ImgBase.Instance.PlayerFaces[0], BackToPlayerPool, Unit.ETeam.Player);
-                ExplodeScript explodeTemp = GetPrefab(EPrefabType.Explode).GetComponent<ExplodeScript>();
+                explodeTemp = GetPrefab(EPrefabType.Explode).GetComponent<ExplodeScript>();
                 playerTemp.SetExplode(explodeTemp);
+                break;
+            case EPrefabType.Wall:
+                if(m_listWallPrefab.Count > 0)
+                {
+                    gameObj = m_listWallPrefab[0];
+                    m_listWallPrefab.RemoveAt(0);
+                }
+                else
+                {
+                    gameObj = Instantiate(m_wallPrefab);
+                }
+                WallUnit wallTemp = gameObj.GetComponent<WallUnit>();
+                wallTemp.Init(ImgBase.Instance.NormalWall, BackToWallPool, Unit.ETeam.None);
+                wallTemp.SetDamagedFace(ImgBase.Instance.DamagedWall);
+                explodeTemp = GetPrefab(EPrefabType.Explode).GetComponent<ExplodeScript>();
+                wallTemp.SetExplode(explodeTemp);
+                break;
+            case EPrefabType.Bullet:
+                if(m_listBulletPrefab.Count > 0)
+                {
+                    gameObj = m_listBulletPrefab[0];
+                    m_listBulletPrefab.RemoveAt(0);
+                }
+                else
+                {
+                    gameObj = Instantiate(m_bulletPrefab);
+                }
+                BulletUnit bulletTemp = gameObj.GetComponent<BulletUnit>();
+                bulletTemp.Init(ImgBase.Instance.Bullet, BackToBulletPool, Unit.ETeam.None);
                 break;
             case EPrefabType.Explode:
                 gameObj = this.GetExplodePrefab();
@@ -110,5 +143,11 @@ public class UnitPool : MonoBehaviour
     {
         m_listEnemyPrefab.Add(_enemyPrefab);
         _enemyPrefab.SetActive(false);
+    }
+
+    public void BackToBulletPool(GameObject _bulletPrefab)
+    {
+        m_listBulletPrefab.Add(_bulletPrefab);
+        _bulletPrefab.SetActive(false);
     }
 }
