@@ -12,14 +12,38 @@ public class BulletUnit : Unit
     {
         throw new System.NotImplementedException();
     }
+    public float ExistTime
+    {
+        get { return m_fExistTime; }
+        set { m_fExistTime = value; }
+    }
     private void Update()
     {
+        //this.Move(this.transform.up);
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+        //    this.InitAndShoot(this.transform.up + new Vector3(1, 0, 0), this.transform.position, ETeam.None);
+        //    Debug.Log(this.transform.up);
+        //}
+        //if (this.isActiveAndEnabled)
+        //{
+        //    m_fExistTime += Time.deltaTime;
+        //    if (m_fExistTime >= m_fMaxTime)
+        //    {
+        //        m_fExistTime = 0;
+        //        this.KillSelf();
+        //    }
+        //}
+        //this.move(movdir);
+        //if (input.getkeydown(keycode.q))
+        //{
+        //    movdir += vector2.right;
+        //}
+    }
+
+    public void SelfUpdate()
+    {
         this.Move(this.transform.up);
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            this.InitAndShoot(this.transform.up + new Vector3(1, 0, 0), this.transform.position, ETeam.None);
-            Debug.Log(this.transform.up);
-        }
         if (this.isActiveAndEnabled)
         {
             m_fExistTime += Time.deltaTime;
@@ -29,11 +53,6 @@ public class BulletUnit : Unit
                 this.KillSelf();
             }
         }
-        //this.move(movdir);
-        //if (input.getkeydown(keycode.q))
-        //{
-        //    movdir += vector2.right;
-        //}
     }
 
     public void InitAndShoot(Vector2 _v2Dir, Vector2 _v2Pos, Unit.ETeam _eTeam)

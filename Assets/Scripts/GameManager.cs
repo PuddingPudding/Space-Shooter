@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         CollideEvent();
+        UpdateAll();   
     }
 
     private void CollideEvent() //碰撞事件，掃描整個場內的物件
@@ -50,6 +51,15 @@ public class GameManager : MonoBehaviour
                     bullet.KillSelf();
                 }
             }
+        }
+    }
+
+    private void UpdateAll()
+    {
+        List<BulletUnit> listPlayerBulletUnit = playerManager.BulletList;
+        foreach (BulletUnit bullet in listPlayerBulletUnit)
+        {
+            bullet.SelfUpdate();
         }
     }
 
